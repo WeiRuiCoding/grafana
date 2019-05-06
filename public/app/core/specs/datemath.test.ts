@@ -1,6 +1,6 @@
 import sinon from 'sinon';
 
-import * as dateMath from 'app/core/utils/datemath';
+import * as dateMath from '@grafana/ui/src/utils/datemath';
 import moment from 'moment';
 import _ from 'lodash';
 

@@ -1,5 +1,5 @@
 import moment from 'moment';
-import * as dateMath from 'app/core/utils/datemath';
+import * as dateMath from '@grafana/ui/src/utils/datemath';
 import { momentUtc } from '@grafana/ui';
 
 export function inputDateDirective() {
