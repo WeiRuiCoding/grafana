@@ -1,4 +1,4 @@
-import React, { PureComponent, ChangeEvent, KeyboardEvent } from 'react';
+import React, { PureComponent, ChangeEvent, MouseEvent } from 'react';
 import moment from 'moment';
 import { TimeFragment, TIME_FORMAT, Input } from '@grafana/ui';
 
@@ -10,6 +10,7 @@ export interface Props {
   roundup?: boolean;
   timezone?: string;
   onChange: (value: string, isValid: boolean) => void;
+  tabIndex?: number;
 }
 
 export class TimePickerInput extends PureComponent<Props> {
@@ -28,14 +29,9 @@ export class TimePickerInput extends PureComponent<Props> {
 
   onChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { onChange } = this.props;
-    console.log('onChange', event);
     const value = event.target.value;
 
     onChange(value, this.isValid(value));
-  };
-
-  onKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
-    console.log('onKeyDown', event.charCode || event.keyCode);
   };
 
   valueToString = (value: TimeFragment) => {
@@ -46,8 +42,11 @@ export class TimePickerInput extends PureComponent<Props> {
     }
   };
 
+  // Avoid propagate to react-select, since that prevents default behaviour and input's wont be focused
+  stopPropagation = (evt: MouseEvent<HTMLInputElement>) => evt.stopPropagation();
+
   render() {
-    const { value } = this.props;
+    const { value, tabIndex } = this.props;
     const valueString = this.valueToString(value);
     const error = !this.isValid(valueString);
 
@@ -55,11 +54,12 @@ export class TimePickerInput extends PureComponent<Props> {
       <Input
         type="text"
         onChange={this.onChange}
-        onKeyUp={this.onKeyDown}
         onBlur={this.onChange}
         hideErrorMessage={true}
         value={valueString}
+        onMouseDown={this.stopPropagation}
         className={`time-picker-input${error ? '-error' : ''}`}
+        tabIndex={tabIndex}
       />
     );
   }
