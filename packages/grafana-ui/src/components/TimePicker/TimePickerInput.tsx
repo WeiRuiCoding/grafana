@@ -1,4 +1,4 @@
-import React, { PureComponent, ChangeEvent } from 'react';
+import React, { PureComponent, ChangeEvent, KeyboardEvent } from 'react';
 import moment from 'moment';
 import { TimeFragment, TIME_FORMAT, Input } from '@grafana/ui';
 
@@ -28,9 +28,14 @@ export class TimePickerInput extends PureComponent<Props> {
 
   onChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { onChange } = this.props;
+    console.log('onChange', event);
     const value = event.target.value;
 
     onChange(value, this.isValid(value));
+  };
+
+  onKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    console.log('onKeyDown', event.charCode || event.keyCode);
   };
 
   valueToString = (value: TimeFragment) => {
@@ -50,6 +55,7 @@ export class TimePickerInput extends PureComponent<Props> {
       <Input
         type="text"
         onChange={this.onChange}
+        onKeyUp={this.onKeyDown}
         onBlur={this.onChange}
         hideErrorMessage={true}
         value={valueString}
